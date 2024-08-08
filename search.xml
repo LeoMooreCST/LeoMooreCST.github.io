@@ -97,4 +97,66 @@
         <tag>数据</tag>
       </tags>
   </entry>
+  <entry>
+    <title>使用Gitlfs上传大文件(大于100M小于5G)教程</title>
+    <url>/2024/08/08/%E4%BD%BF%E7%94%A8Gitlfs%E4%B8%8A%E4%BC%A0%E5%A4%A7%E6%96%87%E4%BB%B6(%E5%A4%A7%E4%BA%8E100M%E5%B0%8F%E4%BA%8E5G)%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="1-环境搭建"><a href="#1-环境搭建" class="headerlink" title="1. 环境搭建"></a>1. 环境搭建</h2><ul>
+<li><p><strong>演示平台</strong>：windows11</p>
+</li>
+<li><p><strong>Git版本</strong>：2.39.1</p>
+</li>
+<li><p><strong>Gitlfs版本</strong>：3.3.0 (可在<a class="link"   href="https://git-lfs.github.com/%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC" >https://git-lfs.github.com/下载最新版本 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>)</p>
+</li>
+<li><p><strong>环境验证</strong>：</p>
+<p>在cmd中输入以下命令有版本号出现即可：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">git -v</span><br><span class="line">git lfs -v</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h2 id="2-使用步骤"><a href="#2-使用步骤" class="headerlink" title="2. 使用步骤"></a>2. 使用步骤</h2><p>假设你已经创建好一个仓库，地址为：<a class="link"   href="https://github.com/yourname/myrepo.git%EF%BC%8C" >https://github.com/yourname/myrepo.git， <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="第一步：克隆到本地"><a href="#第一步：克隆到本地" class="headerlink" title="第一步：克隆到本地"></a>第一步：克隆到本地</h3><div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/yourname/myrepo.git</span><br><span class="line">cd myrepo</span><br><span class="line">git lfs install</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="第二步：将需要上传的大文件-文件夹复制到仓库文件夹下"><a href="#第二步：将需要上传的大文件-文件夹复制到仓库文件夹下" class="headerlink" title="第二步：将需要上传的大文件&#x2F;文件夹复制到仓库文件夹下"></a>第二步：将需要上传的大文件&#x2F;文件夹复制到仓库文件夹下</h3><p>假如你的文件夹结构如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">--folder1</span><br><span class="line">	sub-folder1</span><br><span class="line">	file1.bin</span><br><span class="line">	file2.pth</span><br><span class="line">--folder2</span><br><span class="line">	file3.mp4</span><br><span class="line">	file4.zip</span><br><span class="line">file5.mp4</span><br><span class="line">file6.zip</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="第三步：确定需要跟踪的文件"><a href="#第三步：确定需要跟踪的文件" class="headerlink" title="第三步：确定需要跟踪的文件"></a>第三步：确定需要跟踪的文件</h2><ul>
+<li><p>假如你需要上传以上**所有文件(包括文件夹)**，执行：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">git lfs track &quot;**/*&quot;</span><br><span class="line">git lfs track &quot;*&quot;</span><br></pre></td></tr></table></figure></div></li>
+<li><p>假如你只需要上传folder1文件下以”.bin”结尾的文件，执行：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">git lfs track &quot;folder1/*.bin&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>如果是所有文件夹下的”.bin”文件，执行：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">git lfs track &quot;**/*.bin&quot;</span><br></pre></td></tr></table></figure></div></li>
+<li><p>如果你只需跟踪以上所有.mp4文件，执行：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">git lfs track &quot;folder2/*.mp4&quot;</span><br><span class="line">git lfs track &quot;*.mp4&quot;</span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<p>其余情况以此类推，在选择完需要跟踪的文件后，可以使用以下命令检查是否跟踪设置正确：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">cat .gitattributes</span><br></pre></td></tr></table></figure></div>
+
+<p>如果你想撤销某个track的记录，使用如下命令，然后删除对应行记录即可</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">nano .gitattributes</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="第四步：添加和提交文件"><a href="#第四步：添加和提交文件" class="headerlink" title="第四步：添加和提交文件"></a>第四步：添加和提交文件</h3><div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">添加 .gitattributes 文件到 Git 暂存区</span></span><br><span class="line">git add .gitattributes</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">提交 .gitattributes 文件</span></span><br><span class="line">git commit -m &quot;Add Git LFS tracking for all files in specific folders&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>使用git add ….添加你需要上传的文件，注意，上面git lfs track只是追踪大文件，以下是添加你想上传的所有文件</p>
+<blockquote>
+<p>git add *命令会添加所有的文件，包括新建的、修改过的和已删除的文件</p>
+<p>git add .命令只添加新建的和修改过的文件，不包括已删除的文件</p>
+</blockquote>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">如所有文件</span></span><br><span class="line">git add .</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">如folder1下所有文件</span></span><br><span class="line">git add folder1/*</span><br></pre></td></tr></table></figure></div>
+
+<p>如果在执行add操作后想撤销，则可使用：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">git reset yourfile   # 撤销单个文件</span><br><span class="line">git reset            # 撤销所有已添加文件</span><br></pre></td></tr></table></figure></div>
+
+<p>选择完文件后，执行如下提交：</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">git commit -m &quot;Add all files to Git LFS&quot;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">推送到远程仓库</span></span><br><span class="line">git push origin main</span><br></pre></td></tr></table></figure></div>
+
+<p>注意：git lfs默认空间为1G，超过需要自行购买。</p>
+]]></content>
+      <categories>
+        <category>tutorial</category>
+      </categories>
+      <tags>
+        <tag>github</tag>
+        <tag>gitlfs</tag>
+      </tags>
+  </entry>
 </search>
